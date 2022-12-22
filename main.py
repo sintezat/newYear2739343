@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
-XXX = 0
-
 import telebot
 from datetime import *
 import time
 import pytz
+
+
+bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
+
+
+def chatIdSaver(chatid):
+    t = open('data', 'r').read()
+    with open('data', 'a') as f:
+        if chatid not in t:
+            f.write(chatid + '\n')
+
+
+def sendGreeting():
+    with open('data', 'r') as f:
+        for x in f.readlines():
+            bot.send_message(int(x), 'С НГ!!!!!!!!!!!!!!!!!!!!!!!111')  # БББББББББББББББББББББББББББББББББББББББББББББ
+
 
 def taimer():
     tz = pytz.timezone('Europe/Moscow')
@@ -16,8 +31,8 @@ def taimer():
 
     s = a[-1] + a[-2]*60 + a[-3]*3600 + a[-4]*3600*24
     if 0 < s < 100:
-        print('с НГ')  #AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        XXX = 1
+        sendGreeting()
+
     s = 2678400 - s
     d = s//(3600*24)
     ch = (s - d*(3600*24))//3600
@@ -65,9 +80,10 @@ def taimer():
     return ' '.join(['До Нового года',str(d),d1,str(ch),ch1,str(mi),mi1,str(sek),sek1])
 
 
-bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
 @bot.message_handler(commands=['start'])
 def start(message):
+    chatIdSaver(str(message.chat.id))
     bot.send_message(message.chat.id, taimer(), parse_mode='html')
+
 
 bot.polling(none_stop=True)
