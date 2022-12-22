@@ -3,9 +3,14 @@ import telebot
 from datetime import *
 import time
 import pytz
+from os import path
 
 
-bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
+if __name__ == '__main__':
+    if not path.isfile('data'):
+        f = open('data', 'w')
+        f.close()
+    bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
 
 
 def chatIdSaver(chatid):
