@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 XXX = 0
-# import telebot
-#
-# bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
-# @bot.message_handler(commands=['start'])
-# def start(message):
-#     bot.send_message(message.chat.id, "ППРриВВеТ", parse_mode='html')
-# bot.polling(none_stop=True)
 
-
+import telebot
 from datetime import *
 import time
 import pytz
@@ -22,11 +15,10 @@ def taimer():
         a[i] =int(a[i])
 
     s = a[-1] + a[-2]*60 + a[-3]*3600 + a[-4]*3600*24
-    if s < 100000:
+    if 0 < s < 100:
         print('с НГ')  #AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         XXX = 1
     s = 2678400 - s
-    XXX = 1
     d = s//(3600*24)
     ch = (s - d*(3600*24))//3600
     mi = (s % 3600)//60
@@ -70,7 +62,12 @@ def taimer():
     else:
         sek1 = 'секунд'
 
-    print(d,d1,ch,ch1,mi,mi1,sek,sek1)
+    return ' '.join(['До Нового года',str(d),d1,str(ch),ch1,str(mi),mi1,str(sek),sek1])
 
-a = taimer()
-print(a)
+
+bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, taimer(), parse_mode='html')
+
+bot.polling(none_stop=True)
