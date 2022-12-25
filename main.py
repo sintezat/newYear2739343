@@ -3,6 +3,7 @@ import telebot
 from datetime import *
 import time
 import pytz
+import sys
 from os import path
 
 
@@ -23,7 +24,7 @@ def chatIdSaver(chatid):
 def sendGreeting():
     with open('data', 'r') as f:
         for x in f.readlines():
-            bot.send_message(int(x), 'С НГ!!!!!!!!!!!!!!!!!!!!!!!111')  # БББББББББББББББББББББББББББББББББББББББББББББ
+            bot.send_message(int(x), 'С НГ!!!!!!!!!!!!!!!!!!!!!!!111')
 
 
 def taimer():
@@ -35,8 +36,6 @@ def taimer():
         a[i] =int(a[i])
 
     s = a[-1] + a[-2]*60 + a[-3]*3600 + a[-4]*3600*24
-    if 0 < s < 100:
-        sendGreeting()
 
     s = 2678400 - s
     d = s//(3600*24)
@@ -82,8 +81,7 @@ def taimer():
     else:
         sek1 = 'секунд'
 
-    return ' '.join(['До Нового года',str(d),d1,str(ch),ch1,str(mi),mi1,str(sek),sek1])
-
+    return ' '.join(['До Нового года осталось',str(d),d1,str(ch),ch1,str(mi),mi1,str(sek),sek1, '!!!'])
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -91,4 +89,12 @@ def start(message):
     bot.send_message(message.chat.id, taimer(), parse_mode='html')
 
 
-bot.polling(none_stop=True)
+while ((datetime.now(pytz.timezone('Europe/Moscow'))).year) == 2022:
+    try:
+        bot.polling(none_stop=True, interval=0)
+    except Exception:
+        pass
+else:
+    sendGreeting()
+    sys.exit()
+
