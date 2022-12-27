@@ -11,7 +11,7 @@ if __name__ == '__main__':
     if not path.isfile('data'):
         f = open('data', 'w')
         f.close()
-    bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
+    bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuW')
 
 
 def chatIdSaver(chatid):
@@ -36,7 +36,9 @@ def taimer():
         a[i] =int(a[i])
 
     s = a[-1] + a[-2]*60 + a[-3]*3600 + a[-4]*3600*24
-
+    if s < 1000:
+        sendGreeting()
+        sys.exit()
     s = 2678400 - s
     d = s//(3600*24)
     ch = (s - d*(3600*24))//3600
@@ -88,12 +90,10 @@ def start(message):
     chatIdSaver(str(message.chat.id))
     bot.send_message(message.chat.id, taimer(), parse_mode='html')
 
-
 while ((datetime.now(pytz.timezone('Europe/Moscow'))).year) == 2022:
-    try:
-        bot.polling(none_stop=True, interval=0)
-    except Exception:
-        pass
+
+    bot.polling(none_stop=True, interval=0)
+
 else:
     sendGreeting()
     sys.exit()
