@@ -13,8 +13,8 @@ if __name__ == '__main__':
     dayEndsWith = {'й': [8,7,6,5,0]}
     hourEndsWith = {'а': [2,3,4,22,23]}
     minsecEndsWith = {'а': [1,21,31,41,51],
-                'ы': [2,3,4,22,23,24,32,33,34,42,43,44,52,53,54]}
-    bot = telebot.TeleBot('5249465871:AAGUFHgcxqZNPPwc5fSXFj5TMCs25FfqZzE')
+                      'ы': [2,3,4,22,23,24,32,33,34,42,43,44,52,53,54]}
+    bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
 
 
 @bot.message_handler(commands=['start'])
@@ -65,8 +65,8 @@ def main():
 
 
 def timer():
+    sleep(5)
     while True:
-        print(1)
         if datetime(2023, 1, 1, 0, 0, 1) - datetime.now() <= timedelta(seconds=5):
             sendGreeting()
             system('pkill python')
