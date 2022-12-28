@@ -1,17 +1,26 @@
-# -*- coding: utf-8 -*-
 import telebot
-from datetime import *
-import time
-import pytz
-import sys
-from os import path
+from datetime import datetime, timedelta
+from threading import Thread
+from time import sleep
+from os import path, system
 
 
 if __name__ == '__main__':
     if not path.isfile('data'):
         f = open('data', 'w')
         f.close()
-    bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuW')
+
+    dayEndsWith = {'й': [8,7,6,5,0]}
+    hourEndsWith = {'а': [2,3,4,22,23]}
+    minsecEndsWith = {'а': [1,21,31,41,51],
+                'ы': [2,3,4,22,23,24,32,33,34,42,43,44,52,53,54]}
+    bot = telebot.TeleBot('5249465871:AAGUFHgcxqZNPPwc5fSXFj5TMCs25FfqZzE')
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    chatIdSaver(str(message.chat.id))
+    bot.send_message(message.chat.id, getTimeDelta())
 
 
 def chatIdSaver(chatid):
@@ -27,74 +36,42 @@ def sendGreeting():
             bot.send_message(int(x), 'С НГ!!!!!!!!!!!!!!!!!!!!!!!111')
 
 
-def taimer():
-    tz = pytz.timezone('Europe/Moscow')
-    a = str(datetime.now(tz)).split()[0].split('-') + str(datetime.now(tz)).split()[1].split(':')
-    a.pop(-1)
-    a[-1] = a[-1][:2]
-    for i in range(len(a)):
-        a[i] =int(a[i])
+def getTimeDelta():
+    delta = datetime(2023, 1, 1, 0, 0, 1) - datetime.now()
+    hms = [int(x) for x in str(delta).split(', ')[1].split('.')[0].split(':')]
 
-    s = a[-1] + a[-2]*60 + a[-3]*3600 + a[-4]*3600*24
-    if s < 1000:
-        sendGreeting()
-        sys.exit()
-    s = 2678400 - s
-    d = s//(3600*24)
-    ch = (s - d*(3600*24))//3600
-    mi = (s % 3600)//60
-    sek = s%60
+    if delta.days in dayEndsWith['й']: days = 'дней'
+    elif delta.days == 1: days = 'день'
+    else: days = 'дня'
 
-    q = [8,7,6,5,0]
-    qq = [3,4,2]
-    if d == 1:
-        d1 = 'день'
-    elif d in q:
-        d1 = 'дней'
-    elif d in qq:
-        d1 = 'дня'
-    else:
-        d1 = 'дня'
+    if hms[0] in hourEndsWith['а']: hours = 'часа'
+    elif hms[0] in (1, 21): hours = 'час'
+    else: hours = 'часов'
+    
+    if hms[1] in minsecEndsWith['а']: minutes = 'минута'
+    elif hms[1] in minsecEndsWith['ы']: minutes = 'минуты'
+    else: minutes = 'минут'
+    
+    if hms[2] in minsecEndsWith['а']: seconds = 'сукунда'
+    elif hms[2] in minsecEndsWith['ы']: seconds = 'секунды'
+    else: seconds = 'секунд'
 
-    q = [2,3,4,22,23]
-    qq = [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-    if ch == 1 or ch == 21:
-        ch1 = 'час'
-    elif ch in q:
-        ch1 = 'часа'
-    elif ch in qq:
-        ch1 = 'часов'
-    else:
-        ch1 = 'часов'
+    return f'До Нового года {delta.days} {days} {hms[0]} {hours} {hms[1]} {minutes} {hms[2]} {seconds}'
 
-    q = [1,21,31,41,51]
-    qq = [2,3,4,22,23,24,32,33,34,42,43,44,52,53,54]
-    if mi in q:
-        mi1 = 'минута'
-    elif mi in qq:
-        mi1 = 'минуты'
-    else:
-        mi1 = 'минут'
 
-    if sek in q:
-        sek1 = 'секунда'
-    elif sek in qq:
-        sek1 = 'секунды'
-    else:
-        sek1 = 'секунд'
-
-    return ' '.join(['До Нового года осталось',str(d),d1,str(ch),ch1,str(mi),mi1,str(sek),sek1, '!!!'])
-
-@bot.message_handler(commands=['start'])
-def start(message):
-    chatIdSaver(str(message.chat.id))
-    bot.send_message(message.chat.id, taimer(), parse_mode='html')
-
-while ((datetime.now(pytz.timezone('Europe/Moscow'))).year) == 2022:
-
+def main():
     bot.polling(none_stop=True, interval=0)
+    return
 
-else:
-    sendGreeting()
-    sys.exit()
 
+def timer():
+    while True:
+        print(1)
+        if datetime(2023, 1, 1, 0, 0, 1) - datetime.now() <= timedelta(seconds=5):
+            sendGreeting()
+            system('pkill python')
+        sleep(1)
+
+
+thread1 = Thread(target=timer).start()
+thread2 = Thread(target=main).start()
