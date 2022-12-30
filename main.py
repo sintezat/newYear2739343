@@ -14,7 +14,7 @@ if __name__ == '__main__':
     hourEndsWith = {'а': [2,3,4,22,23]}
     minsecEndsWith = {'а': [1,21,31,41,51],
                       'ы': [2,3,4,22,23,24,32,33,34,42,43,44,52,53,54]}
-    bot = telebot.TeleBot('5844491437:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
+    bot = telebot.TeleBot('5844491438:AAHp0Ycgb8VuAHY-9WpG_r-u7RTzdGogFuw')
 
 
 @bot.message_handler(commands=['start'])
